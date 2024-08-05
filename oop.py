@@ -41,4 +41,3 @@ li = Line(p1, p2)
 print(str(li))
 print(li.distance())
 print(li.slope())
-
