@@ -1,9 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: [ 'master' ]
+    branches: [ 'master', 'dev' ]
   pull_request:
-    branches: [ 'master' ]
+    branches: [ 'master', 'dev' ]
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -16,3 +16,22 @@ jobs:
           pip install --upgrade pip;
           pip install flake8;
           flake8 --ignore=E501,F401,W503,W504 .
+  deploy:
+    needs: lint
+    runs-on: ubuntu-latest
+    if: github.ref = 'refs/heads/master'
+    name: Deploy to server
+    steps:
+    - name: Executing remote ssh commands
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd gha-explore
+          git pull
+          cat oop.py
+
+
